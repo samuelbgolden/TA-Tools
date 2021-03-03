@@ -10,7 +10,7 @@ def main():
 
     # add dir arg
     parser = argparse.ArgumentParser(description="grades MP1 of CS340 S21")
-    parser.add_argument('dir', help="path to the directory with the student code")
+    parser.add_argument('dir', help="path to   directory with the student code")
     args = parser.parse_args()
 
     # construct paths to needed files
@@ -54,11 +54,11 @@ def main():
     p = subprocess.Popen("stack exec mp1",cwd=TESTING_ENV)
     p.wait()
 
-    
-
-
     # remove copied file from testing environment
     os.remove(os.path.join(testing_dest,'MP1.hs'))
+
+    print(f"\nDone testing student name: '{yaml_data['author']}', student email: '{yaml_data['maintainer']}'")
+
 
 if __name__ == '__main__':
     main()
