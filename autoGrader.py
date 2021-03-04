@@ -103,11 +103,13 @@ def main():
             if decision in ['g','G']:
                 outfile = os.path.join(args.output, curr+'.txt')
                 gen_report(outfile,grades,student_identifier,"",grades_template)
+                add_to_summary(student_identifier,total_grade,args.output)
                 break
             elif decision in ['n','N']:
                 note = str(input('\tnote: '))
                 outfile = os.path.join(args.output, curr+'.txt')
                 gen_report(outfile,grades,student_identifier,note,grades_template)
+                add_to_summary(student_identifier,total_grade,args.output)
                 break
             elif decision in ['r','R']:
                 dirs.insert(0,curr)
@@ -143,6 +145,14 @@ def gen_report(filename, grades, student_id, note, template):
 
     f.writelines(lines)
     f.close()
+
+def add_to_summary(student_id,grade,outdir):
+    filename = os.path.join(outdir,'SUMMARY.txt')
+    content = f"{student_id},{grade}"
+
+    with open(filename,'a') as f:
+        f.write(content)
+
 
 if __name__ == '__main__':
     main()
