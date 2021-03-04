@@ -148,7 +148,7 @@ def gen_report(filename, grades, student_id, note, template):
 
 def add_to_summary(student_id,grade,outdir):
     filename = os.path.join(outdir,'SUMMARY.txt')
-    content = f"{student_id},{grade}"
+    content = f"{student_id},{grade}\n"
 
     with open(filename,'a') as f:
         f.write(content)
