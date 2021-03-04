@@ -46,7 +46,10 @@ def main():
 
     path1, dirs1, files1 = next(os.walk(args.output))
     for name in [f.split('.')[0] for f in files1]:
-        dirs.remove(name)
+        try:
+            dirs.remove(name)
+        except ValueError:
+            pass
 
     if args.verbose:
         print(f"\t{len(files1)} reports found, {len(dirs)} dirs remaining to grade")
