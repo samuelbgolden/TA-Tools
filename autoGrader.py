@@ -57,7 +57,7 @@ def main():
     if args.verbose:
         print("\nStarting grading loop...")
 
-    while True:
+    while dirs:
         curr = dirs.pop(0)
 
         grades = {}

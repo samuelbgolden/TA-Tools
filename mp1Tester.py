@@ -6,7 +6,7 @@ import subprocess
 
 def main():
 
-    TESTING_ENV = "C:/Users/Samuel/Google Drive/School/TACS340/2021/repos/mp1Tester"
+    TESTING_ENV = "C:/Users/samgo/Desktop/Google Drive/School/TACS340/2021/repos/mp1Tester"
 
     # add dir arg
     parser = argparse.ArgumentParser(description="grades MP1 of CS340 S21")
