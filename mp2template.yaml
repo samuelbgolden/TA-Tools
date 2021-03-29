@@ -1,0 +1,13 @@
+cycleN: 4
+chunksOf: 4
+unzip4: 4
+intersperse: 4
+removeAll: 4
+sublist: 4
+luhn: 4
+runLengthEncode: 4
+runLengthDecode: 4
+vigenere: 4
+liveNeighbors: 8
+nextWorld: 8
+event-handling-and-drawing: 16
