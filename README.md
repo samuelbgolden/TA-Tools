@@ -2,6 +2,7 @@
 Small personal repo meant to house some tools I write to grade student code easier.
 
 # Usage
+```
 usage: autoGrader.py [-h] [-v] src template tester output
 
 positional arguments:
@@ -13,3 +14,4 @@ positional arguments:
 optional arguments:
   -h, --help     show this help message and exit
   -v, --verbose  more print statements
+```
