@@ -11,6 +11,7 @@ def main():
     # add dir arg
     parser = argparse.ArgumentParser(description="grades MP1 of CS340 S21")
     parser.add_argument('dir', help="path to   directory with the student code")
+    parser.add_argument('-p','--printsrc', help='print students code?', action='store_true')
     args = parser.parse_args()
 
     # construct paths to needed files
@@ -32,15 +33,15 @@ def main():
 
     # copy file from original location to testing environment
     testing_dest = os.path.join(TESTING_ENV,'src')
-    print(testing_dest)
     shutil.copy(src_file, testing_dest)
 
-    # printing code
-    print("******************** FILE SRC ********************\n")
-    code = open(src_file, 'r')
-    for line in code.readlines():
-        print('\t' + line, end='')
-    print("\n****************** END FILE SRC ******************")
+    if args.printsrc:
+        # printing code
+        print("******************** FILE SRC ********************\n")
+        code = open(src_file, 'r')
+        for line in code.readlines():
+            print('\t' + line, end='')
+        print("\n****************** END FILE SRC ******************")
 
 
     # run tests

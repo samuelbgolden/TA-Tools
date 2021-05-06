@@ -10,6 +10,8 @@ def main():
     parser.add_argument('tester', help="path to python file to pass individual repo to")
     parser.add_argument('output', help="path to dir for report outputs and progress record")
     parser.add_argument('-v', '--verbose', help="more print statements", action="store_true")
+    parser.add_argument('-r', '--reverse', help="iterate through students in reverse order (probably for running multiple instances", action='store_true')
+    parser.add_argument('-p', '--printsrc', help="print tested source code along with testing output", action="store_true")
     args = parser.parse_args()
 
     if args.verbose:
@@ -19,6 +21,7 @@ def main():
         print(f"\ttester:{args.tester}")
         print(f"\toutput:{args.output}")
         print(f"\tverbose:{args.verbose}")
+        print(f"\treverse:{args.reverse}")
 
     if args.verbose:
         print('Opening src directory...')
@@ -54,6 +57,11 @@ def main():
     if args.verbose:
         print(f"\t{len(files1)} reports found, {len(dirs)} dirs remaining to grade")
 
+    if args.reverse:
+        dirs.reverse()
+        if args.verbose:
+            print("dirs reversed")
+
     if args.verbose:
         print("\nStarting grading loop...")
 
@@ -75,11 +83,15 @@ def main():
             print('Could not understand input, stopping...')
             return
 
-        cmd = "python " + args.tester + " " + os.path.join(args.src, curr)
+        cmd = f"python \"{args.tester}\" \"{os.path.join(args.src, curr)}\" {'-p' if args.printsrc else ''}"
         p = subprocess.Popen(cmd)
         p.wait()
 
-        student_identifier = str(input("Enter the current student's identifier: "))
+        student_identifier = str(input("Enter the current student's identifier ('r' to retest): "))
+
+        if student_identifier in ['r','R']:
+            dirs.insert(0,curr)
+            continue
 
         for k in grades.keys():
             q = f"grade for {k} out of {grades_template[k]} (use ':' to add a note)? "

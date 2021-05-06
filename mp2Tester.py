@@ -11,6 +11,7 @@ def main():
     # add dir arg
     parser = argparse.ArgumentParser(description="grades MP2 of CS340 S21")
     parser.add_argument('dir', help="path to directory with the student code")
+    parser.add_argument('-p','--printsrc', help='print students code?', action='store_true')
     args = parser.parse_args()
 
     # construct paths to needed files
@@ -41,18 +42,19 @@ def main():
     shutil.copy(src_file1, testing_dest)
     shutil.copy(src_file2, testing_dest)
 
-    # printing code
-    print("******************** FILE SRC MP2a ********************\n")
-    code = open(src_file1, 'r')
-    for line in code.readlines():
-        print('\t' + line, end='')
+    if args.printsrc:
+        # printing code
+        print("******************** FILE SRC MP2a ********************\n")
+        code = open(src_file1, 'r')
+        for line in code.readlines():
+            print('\t' + line, end='')
 
-    print("******************** FILE SRC MP2b ********************\n")
-    code = open(src_file2, 'r')
-    for line in code.readlines():
-        print('\t' + line, end='')
+        print("******************** FILE SRC MP2b ********************\n")
+        code = open(src_file2, 'r')
+        for line in code.readlines():
+            print('\t' + line, end='')
 
-    print("\n****************** END FILE SRC ******************")
+        print("\n****************** END FILE SRC ******************")
 
 
     # run tests

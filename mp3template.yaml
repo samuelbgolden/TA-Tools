@@ -1,0 +1,14 @@
+treeRepeat: 3
+treeNats: 3
+treeVal: 3
+treeToList: 3
+treeFlip: 3
+treeFromList: 3
+treeIterate: 3
+Functor_fmap: 3
+Applicative_pure: 3
+Applicative_ap: 3
+Card_and_deck: 5
+hand: 10
+computeStats: 10
+codeCoverage: 10
