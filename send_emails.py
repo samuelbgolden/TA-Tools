@@ -76,13 +76,6 @@ def gen_emails(directory):
     email_contents = []
     path, dirs, files = next(os.walk(directory))
 
-    general1 = '''Hello!
-
-    This is an automated email to deliver you your grade report for MP1 in CS340.
-
-    Here it is:
-    '''
-
     for file in files:
         if file == 'SUMMARY.txt':
             continue
@@ -99,16 +92,17 @@ def gen_emails(directory):
 service = service_account_login()
 
 EMAIL_FROM = 'sgolden2@hawk.iit.edu'
-EMAIL_SUBJECT = 'Your CS340 MP1 Report'
+EMAIL_SUBJECT = 'Your CS340 MP4 Report'
 
-emails = gen_emails('../mp1reports')
+emails = gen_emails('C:\\Users\\samgo\\Desktop\\Google Drive\\School\\TACS340\\2021\\mp4reports')
 print([x[0] for x in emails])
 
 for email in emails:
     EMAIL_CONTENT = ''
     EMAIL_TO = f"{email[0]}@hawk.iit.edu"
-    EMAIL_CONTENT += "Hello!\n\nYour grade report for the first CS340 machine problem is below:"
-    EMAIL_CONTENT += email[1]
+    #EMAIL_TO = "samgolden00@gmail.com"
+    EMAIL_CONTENT += "Hello!\n\nYour grade report for MP4 in CS340 is below:"
+    EMAIL_CONTENT += '\n\n' + email[0] + '\n' + email[1]
     EMAIL_CONTENT += "\n\nIf you think I have made a mistake (which is very possible), or you have any questions, please respond to this email or shoot me a message on Discord. Please also note that this grade does not take into account late days. If you have a score listed here, but a zero listed on Blackboard, it probably means that you submitted more than 7 days after the submission deadline.\n\nThanks,\nSam\n\n(p.s. this is an automated message, but it is from my real email address, so you can still respond to it)"
     message = create_message(EMAIL_FROM, EMAIL_TO, EMAIL_SUBJECT, EMAIL_CONTENT)
     sent = send_message(service,'me', message)
