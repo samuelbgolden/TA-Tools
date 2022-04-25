@@ -3,15 +3,24 @@ import subprocess
 import os
 import yaml
 
+
 def main():
-    parser = argparse.ArgumentParser(description="grade some CODE dude let's GO")
-    parser.add_argument('src', help="path to the directory with all students' code")
-    parser.add_argument('template', help="path to template text file for reports; should be a YAML file with each line as '<string key>:<int val>'")
-    parser.add_argument('tester', help="path to python file to pass individual repo to")
-    parser.add_argument('output', help="path to dir for report outputs and progress record")
-    parser.add_argument('-v', '--verbose', help="more print statements", action="store_true")
-    parser.add_argument('-r', '--reverse', help="iterate through students in reverse order (probably for running multiple instances", action='store_true')
-    parser.add_argument('-p', '--printsrc', help="print tested source code along with testing output", action="store_true")
+    parser = argparse.ArgumentParser(
+        description="grade some CODE dude let's GO")
+    parser.add_argument(
+        'src', help="path to the directory with all students' code")
+    parser.add_argument(
+        'template', help="path to template text file for reports; should be a YAML file with each line as '<string key>:<int val>'")
+    parser.add_argument(
+        'tester', help="path to python file to pass individual repo to")
+    parser.add_argument(
+        'output', help="path to dir for report outputs and progress record")
+    parser.add_argument('-v', '--verbose',
+                        help="more print statements", action="store_true")
+    parser.add_argument(
+        '-r', '--reverse', help="iterate through students in reverse order (probably for running multiple instances", action='store_true')
+    parser.add_argument(
+        '-p', '--printsrc', help="print tested source code along with testing output", action="store_true")
     args = parser.parse_args()
 
     if args.verbose:
@@ -22,6 +31,10 @@ def main():
         print(f"\toutput:{args.output}")
         print(f"\tverbose:{args.verbose}")
         print(f"\treverse:{args.reverse}")
+
+    if not os.path.exists(args.output):
+        print(f"Could not find output dir {args.output}")
+        return
 
     if args.verbose:
         print('Opening src directory...')
@@ -35,7 +48,7 @@ def main():
     if args.verbose:
         print("Loading report template...")
 
-    grades_template = yaml.load(open(args.template, 'r'))
+    grades_template = yaml.safe_load(open(args.template, 'r'))
     assert isinstance(grades_template, dict)
     max_grade = sum(list(grades_template.values()))
 
@@ -47,7 +60,11 @@ def main():
     if args.verbose:
         print("Syncing dirs list with existing reports in output directory...")
 
-    path1, dirs1, files1 = next(os.walk(args.output))
+    try:
+        path1, dirs1, files1 = next(os.walk(args.output))
+    except StopIteration:
+        path1 = dirs1 = files1 = []
+
     for name in [f.split('.')[0] for f in files1]:
         try:
             dirs.remove(name)
@@ -74,10 +91,11 @@ def main():
 
         print("\n\n CURRENT DIRECTORY: " + curr)
 
-        decision = str(input("run tester on dir (y/n)? 'n' will skip to next... "))
-        if decision in ['y','Y']:
+        decision = str(
+            input("run tester on dir (y/n)? 'n' will skip to next... "))
+        if decision in ['y', 'Y']:
             pass
-        elif decision in ['n','N']:
+        elif decision in ['n', 'N']:
             continue
         else:
             print('Could not understand input, stopping...')
@@ -87,10 +105,11 @@ def main():
         p = subprocess.Popen(cmd)
         p.wait()
 
-        student_identifier = str(input("Enter the current student's identifier ('r' to retest): "))
+        student_identifier = str(
+            input("Enter the current student's identifier ('r' to retest): "))
 
-        if student_identifier in ['r','R']:
-            dirs.insert(0,curr)
+        if student_identifier in ['r', 'R']:
+            dirs.insert(0, curr)
             continue
 
         for k in grades.keys():
@@ -101,7 +120,7 @@ def main():
                     if len(grade_input) == 1:
                         grades[k] = (grade_input[0], "")
                     elif len(grade_input) == 2:
-                        grades[k] = (grade_input[0],grade_input[1])
+                        grades[k] = (grade_input[0], grade_input[1])
                     break
                 except e:
                     print('bad grade input... please try again')
@@ -109,43 +128,46 @@ def main():
         total_grade = sum([float(x[0]) for x in grades.values()])
 
         print("Final grades:")
-        for k,v in grades.items():
-            print('\t',k,v)
+        for k, v in grades.items():
+            print('\t', k, v)
         print(f"Final grade: {total_grade}/{max_grade}")
 
         while True:
-            decision = str(input("'g' to generate report and move on\n'n' to write a note and then generate report and move on\n'r' to retest and regrade\n's' to skip report generation and move on\n"))
-            if decision in ['g','G']:
+            decision = str(input(
+                "'g' to generate report and move on\n'n' to write a note and then generate report and move on\n'r' to retest and regrade\n's' to skip report generation and move on\n"))
+            if decision in ['g', 'G']:
                 outfile = os.path.join(args.output, curr+'.txt')
-                gen_report(outfile,grades,student_identifier,"",grades_template)
-                add_to_summary(student_identifier,total_grade,args.output)
+                gen_report(outfile, grades, student_identifier,
+                           "", grades_template)
+                add_to_summary(student_identifier, total_grade, args.output)
                 break
-            elif decision in ['n','N']:
+            elif decision in ['n', 'N']:
                 note = str(input('\tnote: '))
                 outfile = os.path.join(args.output, curr+'.txt')
-                gen_report(outfile,grades,student_identifier,note,grades_template)
-                add_to_summary(student_identifier,total_grade,args.output)
+                gen_report(outfile, grades, student_identifier,
+                           note, grades_template)
+                add_to_summary(student_identifier, total_grade, args.output)
                 break
-            elif decision in ['r','R']:
-                dirs.insert(0,curr)
+            elif decision in ['r', 'R']:
+                dirs.insert(0, curr)
                 break
-            elif decision in ['s','S']:
+            elif decision in ['s', 'S']:
                 break
             else:
                 print("Couldn't understand your input...")
 
     print("Done grading! Nice job!")
-        
+
 
 def gen_report(filename, grades, student_id, note, template):
     f = open(filename, 'x')
-    lines = [student_id,'\n\n']
+    lines = [student_id, '\n\n']
     for k in grades.keys():
-        grade,n= grades[k]
+        grade, n = grades[k]
         line = f"{k}: {grade}/{template[k]}"
         if n:
             line += " | " + n
-        line +='\n'
+        line += '\n'
 
         lines.append(line)
 
@@ -161,11 +183,12 @@ def gen_report(filename, grades, student_id, note, template):
     f.writelines(lines)
     f.close()
 
-def add_to_summary(student_id,grade,outdir):
-    filename = os.path.join(outdir,'SUMMARY.txt')
+
+def add_to_summary(student_id, grade, outdir):
+    filename = os.path.join(outdir, 'SUMMARY.txt')
     content = f"{student_id},{grade}\n"
 
-    with open(filename,'a') as f:
+    with open(filename, 'a') as f:
         f.write(content)
 
 

@@ -6,7 +6,7 @@ import subprocess
 
 def main():
 
-    TESTING_ENV = "C:/Users/samgo/Desktop/Google Drive/School/TACS340/2021/repos/mp1Tester"
+    TESTING_ENV = "G:/My Drive/School/TACS340/2022/mp1/mp1Tester"
 
     # add dir arg
     parser = argparse.ArgumentParser(description="grades MP1 of CS340 S21")
@@ -28,7 +28,7 @@ def main():
         return
 
     # load yaml data to get student info
-    yaml_data = yaml.load(open(yaml_file, 'r'))
+    yaml_data = yaml.safe_load(open(yaml_file, 'r'))
     print(f"student name: '{yaml_data['author']}', student email: '{yaml_data['maintainer']}'")
 
     # copy file from original location to testing environment
@@ -46,10 +46,10 @@ def main():
 
     # run tests
     print("\n.....................Running 'stack build'.....................\n")
-    p = subprocess.Popen("stack build",cwd=TESTING_ENV)
+    p = subprocess.Popen("stack build --fast",cwd=TESTING_ENV)
     p.wait()
     print("\n.....................Running 'stack test'.....................\n")
-    p = subprocess.Popen("stack test",cwd=TESTING_ENV)
+    p = subprocess.Popen("stack test --fast",cwd=TESTING_ENV)
     p.wait()
     print("\n.....................Running 'stack exec mp1'.....................\n")
     p = subprocess.Popen("stack exec mp1",cwd=TESTING_ENV)

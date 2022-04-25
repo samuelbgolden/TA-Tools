@@ -6,10 +6,10 @@ import subprocess
 
 def main():
 
-    TESTING_ENV = "C:/Users/samgo/Desktop/Google Drive/School/TACS340/2021/repos/mp2Tester"
+    TESTING_ENV = "C:/Users/samgo/src/samuelbgolden/TA-Tools/mp2Tester"
 
     # add dir arg
-    parser = argparse.ArgumentParser(description="grades MP2 of CS340 S21")
+    parser = argparse.ArgumentParser(description="grades MP2 of CS340 S22")
     parser.add_argument('dir', help="path to directory with the student code")
     parser.add_argument('-p','--printsrc', help='print students code?', action='store_true')
     args = parser.parse_args()
@@ -33,7 +33,7 @@ def main():
         return
 
     # load yaml data to get student info
-    yaml_data = yaml.load(open(yaml_file, 'r'))
+    yaml_data = yaml.safe_load(open(yaml_file, 'r'))
     print(f"student name: '{yaml_data['author']}', student email: '{yaml_data['maintainer']}'")
 
     # copy file from original location to testing environment
